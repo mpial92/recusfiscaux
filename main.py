@@ -21,7 +21,15 @@ def lancer_envoi():
 # === Interface graphique ===
 root = tk.Tk()
 root.title("ENVOI DES RECUS FISCAUX")
-root.state('zoomed')
+try:
+    # Windows : OK
+    root.state('zoomed')
+except Exception:
+    # Linux/macOS : tenter -zoomed, sinon fallback fullscreen
+    try:
+        root.attributes('-zoomed', True)
+    except Exception:
+        root.attributes('-fullscreen', True)
 
 # === Interface graphique ===
 # === Titre ===
