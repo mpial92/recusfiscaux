@@ -1,0 +1,13 @@
+# Dépendances Python pour "recusfiscaux"
+# Ajuste si nécessaire (ajoute/enlève des lignes selon ton script)
+
+docxtpl
+pandas
+openpyxl
+
+# Si tu utilises des dates/formatage avancés :
+# python-dateutil
+
+# Si tu envoies des emails via API tierces (exemples) :
+# requests
+# yagmail
