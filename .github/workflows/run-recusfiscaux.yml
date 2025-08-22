@@ -1,0 +1,61 @@
+name: Run recusfiscaux (main.py)
+
+on:
+  # Lancement manuel via le bouton "Run workflow"
+  workflow_dispatch:
+    inputs:
+      extra_args:
+        description: "Arguments optionnels pour main.py"
+        required: false
+        default: ""
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    env:
+      TZ: Europe/Paris
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Show tree (for debug)
+        run: |
+          pwd
+          ls -la
+          ls -la resultats || true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -V
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Ensure output folder exists
+        run: |
+          mkdir -p resultats
+
+      - name: Run main.py
+        run: |
+          python main.py ${{ github.event.inputs.extra_args }}
+
+      # (Optionnel) Conversion DOCX -> PDF sera ajoutée à l'étape 2.3
+
+      - name: List outputs
+        run: |
+          echo "Contenu de resultats :"
+          ls -la resultats || true
+
+      - name: Upload results as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: recusfiscaux-resultats
+          path: |
+            resultats/**
+          if-no-files-found: warn
+          retention-days: 7
