@@ -4,6 +4,15 @@
 docxtpl
 pandas
 openpyxl
+datetime i
+os
+smtplib
+ssl
+email.message 
+time
+unicodedata
+re
+locale
 
 # Si tu utilises des dates/formatage avancés :
 # python-dateutil
