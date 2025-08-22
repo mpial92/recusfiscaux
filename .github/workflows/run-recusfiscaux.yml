@@ -1,7 +1,6 @@
 name: Run recusfiscaux (main.py)
 
 on:
-  # Lancement manuel via le bouton "Run workflow"
   workflow_dispatch:
     inputs:
       extra_args:
@@ -18,33 +17,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Show tree (for debug)
+      - name: Install OS packages (Tkinter + virtual display)
         run: |
-          pwd
-          ls -la
-          ls -la resultats || true
+          sudo apt-get update
+          sudo apt-get install -y python3 python3-pip python3-tk tk xvfb
+          python3 -V
+          pip3 -V
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: "pip"
-
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
-          python -V
-          pip install --upgrade pip
-          pip install -r requirements.txt
+          pip3 install --upgrade pip
+          pip3 install -r requirements.txt
 
       - name: Ensure output folder exists
-        run: |
-          mkdir -p resultats
+        run: mkdir -p resultats
 
-      - name: Run main.py
-        run: |
-          python main.py ${{ github.event.inputs.extra_args }}
-
-      # (Optionnel) Conversion DOCX -> PDF sera ajoutée à l'étape 2.3
+      - name: Run main.py (headless via Xvfb)
+        run: xvfb-run -a python3 main.py ${{ github.event.inputs.extra_args }}
 
       - name: List outputs
         run: |
@@ -55,7 +44,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: recusfiscaux-resultats
-          path: |
-            resultats/**
+          path: resultats/**
           if-no-files-found: warn
           retention-days: 7
