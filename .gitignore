@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+.env
+
+# Outils
+.DS_Store
+
+# Résultats générés (on ne versionne pas les sorties)
+resultats/*
+!resultats/.gitkeep
